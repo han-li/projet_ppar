@@ -1,8 +1,8 @@
-# PPAR Projet README
+# PPAR Projet README(pair-impair)
 this is a final project of Paris 6's course PPAR...
-___
+_ _ _
 # Progress
-not yet begin
-___
+progressing...
+_ _ _
 # Run test
-not yet begin
+make; make exec
