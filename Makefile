@@ -1,12 +1,14 @@
-CC = gcc
+CC = mpicc
 CFLAGS = -Wall
+HOSTNPROC = -n 8 -hostfile hostfile
 
 BIN = bin
 INC = include
 LIB = library
 OBJ = object
 SRC = src
-MAIN = main_single
+MAIN = main
+RUN = mpirun
 
 all: $(OBJ)/$(MAIN).o $(OBJ)/function.o
 	$(CC) $(CFLAGS) -o $(BIN)/$(MAIN) $^
@@ -21,8 +23,8 @@ $(OBJ)/function.o: $(SRC)/function.c $(INC)/function.h
 	$(CC) $(CFLAGS) -o $(BIN)/$@ $^
 
 clean:
-	rm $(OBJ)/* $(BIN)/$(MAIN)
+	rm $(OBJ)/* $(BIN)/* 
 
 exec:
-	$(BIN)/$(MAIN)
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
 

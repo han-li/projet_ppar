@@ -1,8 +1,8 @@
 # PPAR Projet README(pair-impair)
-this is a final project of Paris 6's course PPAR...
+Pair-impair sert a un projet qui tri un grand nombre de chiffre en parallels par MPI.
 _ _ _
-# Progress
-progressing...
+## Progress
+La partie de code est presque fini, mais on n'a pas encore le tester...
 _ _ _
-# Run test
+## Run test
 make; make exec

@@ -57,39 +57,44 @@ int verify(int *tab, int size){
 	return 1;
 }
 
-void separate(int **tab1,int **tab2,int size){
+void separate(int **tab1,int **tab2,int size1,int size2){
 	int *new1,*new2,i=0,j=0;
-	new1 = (int*) malloc (sizeof(int)*size);
-	new2 = (int*) malloc (sizeof(int)*size);
+	new1 = (int*) malloc (sizeof(int)*size1);
+	new2 = (int*) malloc (sizeof(int)*size2);
 
 //	DEBUG_PRINT("sep",0);
-	while( i+j < size ){
-		if( (*tab1)[i] < (*tab2)[j] ){
-			new1[i+j] = (*tab1)[i];
-			i++;
-		}else{
-			new1[i+j] = (*tab2)[j];
-			j++;
-		}
+	while( i+j < size1 ){
+		if( i == size1 || j == size2 )break;
+		if( (*tab1)[i] < (*tab2)[j] )
+			new1[i+j] = (*tab1)[i++];
+		else
+			new1[i+j] = (*tab2)[j++];
+		
+//		printf("i:%d,j:%d,",i,j);
+//		print_tab(new1,i+j);
 	}
 
 //	DEBUG_PRINT("sep",1);
-	while( i+j < (size*2) ){
-		if( i == size || j == size )break;
+	while( i+j < (size1+size2) ){
+		if( i == size1 || j == size2 )break;
 
-		if( (*tab1)[i] < (*tab2)[j] ){
-			new2[i+j-size] = (*tab1)[i];
-			i++;
-		}else{
-			new2[i+j-size] = (*tab2)[j];
-			j++;
-		}
+		if( (*tab1)[i] < (*tab2)[j] )
+			new2[i+j-size1] = (*tab1)[i++];
+		else
+			new2[i+j-size1] = (*tab2)[j++];
+		
+//		printf("i:%d,j:%d,",i,j);
+//		print_tab(new2,i+j-size1);
 	}
 
-	while( i < size )
-		new2[i] = (*tab1)[i++];
-	while( j < size )
-		new2[j] = (*tab2)[j++];
+	while( i < size1 )
+		new2[i+j-size1] = (*tab1)[i++];
+//	printf("i:%d,j:%d,",i,j);
+//	print_tab(new2,i+j-size1);
+	while( j < size2 )
+		new2[i+j-size1] = (*tab2)[j++];
+//	printf("i:%d,j:%d,",i,j);
+//	print_tab(new2,i+j-size1);
 
 	free(*tab1);
 	free(*tab2);
@@ -98,12 +103,12 @@ void separate(int **tab1,int **tab2,int size){
 	*tab2 = new2;
 }	
 
-int verify2(int *tab1,int *tab2,int size){
-	if(!verify(tab1,size))
+int verify2(int *tab1,int *tab2,int size1,int size2){
+	if(!verify(tab1,size1))
 		return 0;
-	if(!verify(tab2,size))
+	if(!verify(tab2,size2))
 		return 0;
-	if( tab1[size-1] > tab2[size-1] )
+	if( tab1[size1-1] > tab2[0] )
 		return 0;
 	return 1;
 }
