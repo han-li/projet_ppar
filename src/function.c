@@ -50,3 +50,54 @@ int verify(int *tab, int size){
 			return 0;
 	return 1;
 }
+
+void separate(int **tab1,int **tab2,int size){
+	int *new1,*new2,i=0,j=0;
+	new1 = (int*) malloc (sizeof(int)*size);
+	new2 = (int*) malloc (sizeof(int)*size);
+
+//	DEBUG_PRINT("sep",0);
+	while( i+j < size ){
+		if( (*tab1)[i] < (*tab2)[j] ){
+			new1[i+j] = (*tab1)[i];
+			i++;
+		}else{
+			new1[i+j] = (*tab2)[j];
+			j++;
+		}
+	}
+
+//	DEBUG_PRINT("sep",1);
+	while( i+j < (size*2) ){
+		if( i == size || j == size )break;
+
+		if( (*tab1)[i] < (*tab2)[j] ){
+			new2[i+j-size] = (*tab1)[i];
+			i++;
+		}else{
+			new2[i+j-size] = (*tab2)[j];
+			j++;
+		}
+	}
+
+	while( i < size )
+		new2[i] = (*tab1)[i++];
+	while( j < size )
+		new2[j] = (*tab2)[j++];
+
+	free(*tab1);
+	free(*tab2);
+
+	*tab1 = new1;
+	*tab2 = new2;
+}	
+
+int verify2(int *tab1,int *tab2,int size){
+	if(!verify(tab1,size))
+		return 0;
+	if(!verify(tab2,size))
+		return 0;
+	if( tab1[size-1] > tab2[size-1] )
+		return 0;
+	return 1;
+}
