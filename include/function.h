@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <mpi.h>
+#include <sys/time.h>
 
 #define DEBUG 0
 
@@ -31,3 +32,6 @@ void separate(int **tab1,int **tab2,int size);
 
 /* verifier la fonction separate(...) */
 int verify2(int *tab1,int *tab2,int size);
+
+/* preter la fonction de tme */
+double my_gettimeofday();

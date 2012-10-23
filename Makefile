@@ -6,12 +6,12 @@ INC = include
 LIB = library
 OBJ = object
 SRC = src
-MAIN = main
+MAIN = main_single
 
-all: $(OBJ)/main.o $(OBJ)/function.o
+all: $(OBJ)/$(MAIN).o $(OBJ)/function.o
 	$(CC) $(CFLAGS) -o $(BIN)/$(MAIN) $^
 
-$(OBJ)/main.o: $(SRC)/main.c $(INC)/function.h
+$(OBJ)/$(MAIN).o: $(SRC)/$(MAIN).c $(INC)/function.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 	
 $(OBJ)/function.o: $(SRC)/function.c $(INC)/function.h

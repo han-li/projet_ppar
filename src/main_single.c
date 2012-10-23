@@ -1,7 +1,7 @@
 #include "../include/function.h"
 
 int main(int argc, char**argv){
-	int my_rank,size=11;
+	int my_rank,size=1572864;
 
 	/* init MPI 
 	MPI_Init(&argc,&argv);
