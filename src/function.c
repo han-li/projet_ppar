@@ -64,8 +64,11 @@ void separate(int **tab1,int **tab2,int size1,int size2){
 
 //	DEBUG_PRINT("sep",0);
 	while( i+j < size1 ){
-		if( i == size1 || j == size2 )break;
-		if( (*tab1)[i] < (*tab2)[j] )
+		if( i >= size1 )
+			new1[i+j] = (*tab2)[j++];
+		else if( j >= size2 )
+			new1[i+j] = (*tab1)[i++];
+		else if( (*tab1)[i] < (*tab2)[j] )
 			new1[i+j] = (*tab1)[i++];
 		else
 			new1[i+j] = (*tab2)[j++];
@@ -76,9 +79,11 @@ void separate(int **tab1,int **tab2,int size1,int size2){
 
 //	DEBUG_PRINT("sep",1);
 	while( i+j < (size1+size2) ){
-		if( i == size1 || j == size2 )break;
-
-		if( (*tab1)[i] < (*tab2)[j] )
+		if( i >= size1 )
+			new2[i+j-size1] = (*tab2)[j++];
+		else if( j >= size2 )
+			new2[i+j-size1] = (*tab1)[i++];
+		else if( (*tab1)[i] < (*tab2)[j] )
 			new2[i+j-size1] = (*tab1)[i++];
 		else
 			new2[i+j-size1] = (*tab2)[j++];
@@ -87,14 +92,6 @@ void separate(int **tab1,int **tab2,int size1,int size2){
 //		print_tab(new2,i+j-size1);
 	}
 
-	while( i < size1 )
-		new2[i+j-size1] = (*tab1)[i++];
-//	printf("i:%d,j:%d,",i,j);
-//	print_tab(new2,i+j-size1);
-	while( j < size2 )
-		new2[i+j-size1] = (*tab2)[j++];
-//	printf("i:%d,j:%d,",i,j);
-//	print_tab(new2,i+j-size1);
 
 	free(*tab1);
 	free(*tab2);
