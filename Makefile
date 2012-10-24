@@ -1,4 +1,5 @@
 CC = mpicc
+CC2 = gcc
 CFLAGS = -Wall
 HOSTNPROC = -n 8 -hostfile hostfile
 
@@ -9,8 +10,9 @@ OBJ = object
 SRC = src
 MAIN = main
 RUN = mpirun
+TEST = main2
 
-all: $(OBJ)/$(MAIN).o $(OBJ)/function.o
+all: $(OBJ)/$(MAIN).o $(OBJ)/function.o 
 	$(CC) $(CFLAGS) -o $(BIN)/$(MAIN) $^
 
 $(OBJ)/$(MAIN).o: $(SRC)/$(MAIN).c $(INC)/function.h
@@ -28,3 +30,6 @@ clean:
 exec:
 	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
 
+exec2:
+	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c
+	$(BIN)/$(TEST)

@@ -46,6 +46,8 @@ void sort(int *tab,int size){
 		else
 			for(j=1;j<size-1;j+=2)
 				compare_exchange(&tab[j],&tab[j+1]);
+		if( i % 10000 == 0 )
+			DEBUG_PRINT("step",i/10000);
 	}
 }
 
