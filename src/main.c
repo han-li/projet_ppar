@@ -31,7 +31,6 @@ int main(int argc, char**argv){
 		}
 
 		if(verify(tab1,size))
-			//DEBUG_PRINT("true",my_rank);
 			printf("%d:\tmin: %d\tmax: %d\n",my_rank,tab1[0],tab1[size-1]);
 
 	//	total = (int*)malloc(sizeof(int)*TOTAL);
@@ -56,7 +55,7 @@ int main(int argc, char**argv){
 			MPI_Recv(tab1,size,MPI_INT,my_rank+1,TAG,MPI_COMM_WORLD,NULL);
 
 			MPI_Recv(tab2,size,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,NULL);
-			separate(&tab1,&tab2,size,size);
+			separate(&tab2,&tab1,size,size);
 			MPI_Send(tab2,size,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD);
 		}
 		
