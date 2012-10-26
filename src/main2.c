@@ -1,17 +1,27 @@
 #include "../include/function.h"
 
 int main(int argc,char**argv){
+	int i;
+	sizex = 100000;
 
-	int size1 = 55, size2 = 3;
-	int *tab1 = create_random_tab(size1);
-	int *tab2 = create_random_tab(size2);
+	tabx = create_random_tab(sizex);
+//	print_tab(tabx,sizex);
 
-	sort(tab1,size1);
-	sort(tab2,size2);
+	for(i=0;i<4;i++)
+		if(pthread_create(&pid[i],NULL,sort_thread,&i)!=0){
+			perror("pthread");
+			exit(1);
+		}
 
-	separate(&tab1,&tab2,size1,size2);
+	for(i=0;i<4;i++)
+		pthread_join(pid[i],NULL);
+	
+	//print_tab(tabx,sizex);
 
-	if(verify2(tab1,tab2,size1,size2) == 1)
-		printf("true\n");
+	separate_thread(tabx,sizex);
+	if(verify(tabx,sizex))
+//		print_tab(tabx,sizex);
+//	else
+		DEBUG_PRINT("HELL YEAH",0);
 	return 0;
 }

@@ -51,6 +51,32 @@ void sort(int *tab,int size){
 	}
 }
 
+void sort2(int *tab,int size){
+	int *ind = (int*)malloc(sizeof(int)*size);
+       	int *new_tab = (int*)malloc(sizeof(int)*size);
+	int i,j;
+	memcpy(new_tab,tab,sizeof(int)*size);
+
+	for(i=0;i<size;i++){
+		ind[i] = 0;
+		for(j=0;j<size;j++)
+			if(tab[i]>tab[j])
+				ind[i]++;
+		if( i % 10000 == 0 )
+			DEBUG_PRINT("step",i/10000);
+	}
+
+	memset(tab,-1,sizeof(int)*size);
+	for(i=0;i<size;i++){
+		j=ind[i];
+		while(tab[j]!=-1)j++;
+		tab[j] = new_tab[i];
+	}
+
+	free(ind);
+	free(new_tab);
+}
+
 int verify(int *tab, int size){
 	int i;
 	for(i=0;i<size-1;i++)
@@ -110,4 +136,115 @@ int verify2(int *tab1,int *tab2,int size1,int size2){
 	if( tab1[size1-1] > tab2[0] )
 		return 0;
 	return 1;
+}
+
+void *sort_thread(void* arg){
+	int ssize,ind,i,sssize;
+
+	for(i=0;i<4;i++)
+		if( pid[i] == pthread_self() )
+			ind = i;
+
+	if( sizex%4 == 0 ){
+		ssize = sizex/4;
+		sort2(tabx+(ind*ssize),ssize);
+		if(!verify(tabx+(ind*ssize),ssize))
+			DEBUG_PRINT("SORT_ERROR",1);
+		
+	}else{
+		ssize = ceil((double)sizex/4.);
+		if( ind != 3 ){
+			sort2(tabx+(ind*ssize),ssize);
+			if(!verify(tabx+(ind*ssize),ssize))
+				DEBUG_PRINT("SORT_ERROR",2);
+		}
+		else{
+			sssize = sizex - 3*ssize;	
+			sort2(tabx+(ind*ssize),sssize);
+			if(!verify(tabx+(ind*ssize),sssize))
+				DEBUG_PRINT("SORT_ERROR",3);
+		}
+	}
+
+	pthread_exit(arg);
+	return arg;
+}
+
+void separate_thread(int *tab,int size){
+	int i,j,k,l,ssize,sssize;
+	int *tab2 = (int*)malloc(sizeof(int)*size);
+
+	memcpy(tab2,tab,sizeof(int)*size);
+//	for(i=0;i<size;i++)
+//		tab2[i] = tab[i];
+
+	if( size%4 == 0 )
+		ssize = sssize = size/4;
+	else{
+		ssize = ceil((double)size/4.);
+		DEBUG_PRINT("CEIL",ssize);
+		sssize = size - 3*ssize;
+	}
+
+	i=0;j=ssize;k=ssize*2;l=ssize*3;
+
+	DEBUG_PRINT("BEGIN",1);
+	while( i+(j-ssize) < 2*ssize ){
+		if( i >= ssize )
+			tab[i+(j-ssize)] = tab2[j++];
+		else if ( j >= 2*ssize)
+			tab[i+(j-ssize)] = tab2[i++];
+		else if (tab2[i] > tab2[j])
+			tab[i+(j-ssize)] = tab2[j++];
+		else
+			tab[i+(j-ssize)] = tab2[i++];
+
+/*		if(!verify(tab,i+j-ssize)){
+			DEBUG_PRINT("i",i);
+			DEBUG_PRINT("j",j);
+			exit(1);
+		}
+*/	}
+
+	while( k+l-5*ssize < size-2*ssize){
+		if( k >= 3*ssize )
+			tab[k+l-3*ssize] = tab2[l++];
+		else if ( l >= size )
+			tab[k+l-3*ssize] = tab2[k++];
+		else if ( tab2[k] > tab2[l] )
+			tab[k+l-3*ssize] = tab2[l++];
+		else
+			tab[k+l-3*ssize] = tab2[k++];
+
+/*		if(!verify(tab+2*ssize,k+l-3*ssize)){
+			DEBUG_PRINT("k-1",tab[k-1]);
+			DEBUG_PRINT("l",tab[l]);
+			exit(1);
+		}
+*/	}
+
+	if(!verify(tab,ssize*2)){
+		DEBUG_PRINT("OH FUCK",1);
+	}
+	if(!verify(tab+ssize*2,size-2*ssize)){
+		DEBUG_PRINT("OH FUCK",2);
+	}
+
+	i=0;k=2*ssize;
+	memcpy(tab2,tab,sizeof(int)*size);
+//	for(i=0;i<size;i++)
+//		tab2[i] = tab[i];
+
+	while( i+(k-2*ssize) < size ){
+		if( i >= 2*ssize )
+			tab[i+(k-2*ssize)] = tab2[k++];
+		else if( k >= size )
+			tab[i+(k-2*ssize)] = tab2[i++];
+		else if( tab2[i] > tab2[k] )
+			tab[i+(k-2*ssize)] = tab2[k++];
+		else
+			tab[i+(k-2*ssize)] = tab2[i++];
+	}
+
+	free(tab2);
 }

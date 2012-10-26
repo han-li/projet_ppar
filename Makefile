@@ -22,7 +22,7 @@ $(OBJ)/function.o: $(SRC)/function.c $(INC)/function.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 %: $(SRC)/%.c
-	$(CC) $(CFLAGS) -o $(BIN)/$@ $^
+	$(CC2) $(CFLAGS) -o $(BIN)/$@ $^
 
 clean:
 	rm $(OBJ)/* $(BIN)/* 
@@ -30,6 +30,6 @@ clean:
 exec:
 	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
 
-exec2:
-	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c
+test:
+	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
 	$(BIN)/$(TEST)
