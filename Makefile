@@ -1,7 +1,7 @@
 CC = mpicc
 CC2 = gcc
 CFLAGS = -Wall
-HOSTNPROC = -n 8 -hostfile hostfile
+HOSTNPROC = -n 19 -hostfile hostfile
 
 BIN = bin
 INC = include
