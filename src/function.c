@@ -224,10 +224,10 @@ void separate_thread(int *tab,int size){
 */	}
 
 	if(!verify(tab,ssize*2)){
-		DEBUG_PRINT("OH FUCK",1);
+		DEBUG_PRINT("OH GOD",1);
 	}
 	if(!verify(tab+ssize*2,size-2*ssize)){
-		DEBUG_PRINT("OH FUCK",2);
+		DEBUG_PRINT("OH GOD",2);
 	}
 
 	i=0;k=2*ssize;

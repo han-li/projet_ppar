@@ -47,7 +47,7 @@ int main(int argc, char**argv){
 		if(verify(tabx,sizex))
 			printf("%d:\tmin: %d\tmax: %d\n",my_rank,tabx[0],tabx[sizex-1]);
 		else
-			DEBUG_PRINT("OH FUCK END",my_rank);
+			DEBUG_PRINT("OH GOD END",my_rank);
 
 	//	total = (int*)malloc(sizeof(int)*TOTAL);
 	/* last proc */
@@ -63,7 +63,7 @@ int main(int argc, char**argv){
 			//DEBUG_PRINT("true",my_rank);
 			printf("%d:\tmin: %d\tmax: %d\n",my_rank,tabx[0],tabx[sizex-1]);
 		else
-			DEBUG_PRINT("OH FUCK END",my_rank);
+			DEBUG_PRINT("OH GOD END",my_rank);
 		
 	/* even rank proc */
 	}else if( my_rank % 2 == 0 ){
@@ -81,7 +81,7 @@ int main(int argc, char**argv){
 			//DEBUG_PRINT("true",my_rank);
 			printf("%d:\tmin: %d\tmax: %d\n",my_rank,tabx[0],tabx[sizex-1]);
 		else
-			DEBUG_PRINT("OH FUCK END",my_rank);
+			DEBUG_PRINT("OH GOD END",my_rank);
 
 	/* odd rank proc */
 	}else{
@@ -99,7 +99,7 @@ int main(int argc, char**argv){
 			//DEBUG_PRINT("true",my_rank);
 			printf("%d:\tmin: %d\tmax: %d\n",my_rank,tabx[0],tabx[sizex-1]);
 		else
-			DEBUG_PRINT("OH FUCK END",my_rank);
+			DEBUG_PRINT("OH GOD END",my_rank);
 	}
 	
 //	MPI_Gather(tabx,sizex,MPI_INT,total,TOTAL,MPI_INT,0,MPI_COMM_WORLD);
@@ -112,6 +112,19 @@ int main(int argc, char**argv){
 		else
 			printf("false \n");
 	}*/
+
+	MPI_File fh;
+	if(MPI_File_open(MPI_COMM_WORLD,"/Vrac/2960481_test",MPI_MODE_WRONLY | MPI_MODE_CREATE, MPI_INFO_NULL, &fh)!=0){
+		perror("MPI_File_open");
+		exit(1);
+	}
+
+	if(MPI_File_write_at(fh,my_rank*sizex*sizeof(int),tabx,sizex,MPI_INT,NULL)!=0){
+		perror("MPI_File_write_at");
+		exit(1);
+	}
+
+	MPI_File_close(&fh);
 
 	free(tabx);
 	if(tab2!=NULL)
