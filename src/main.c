@@ -3,6 +3,7 @@
 int main(int argc, char**argv){
 	int my_rank,nbp;
 	int *tab2=NULL,i,tmp,offset;
+	double deb;
 	MPI_Request req1,req2;
 
 	/* init MPI */
@@ -36,6 +37,9 @@ int main(int argc, char**argv){
 	
 	/* init tab */
 	tabx = create_random_tab(sizex);
+
+	if( my_rank == 0 )
+		deb = my_gettimeofday();
 	
 	/* sort by threads */
 	for(i=0;i<4;i++)
@@ -53,9 +57,10 @@ int main(int argc, char**argv){
 
 	DEBUG_PRINT("gather",my_rank);
 
+	tmp = (nbp%2 == 0)?(nbp/2):((nbp+1)/2);
 	/* first proc */
 	if( my_rank == 0 ){
-		for(i=0;i<nbp-1;i++){
+		for(i=0;i<tmp;i++){
 			MPI_Send(tabx,sizex,MPI_INT,my_rank+1,TAG,MPI_COMM_WORLD);
 			MPI_Recv(tabx,sizex,MPI_INT,my_rank+1,TAG,MPI_COMM_WORLD,NULL);
 		}
@@ -69,7 +74,7 @@ int main(int argc, char**argv){
 	/* last proc */
 	}else if( my_rank == nbp-1 ){
 		tab2 = (int*) malloc (sizeof(int)*offset);
-		for(i=0;i<nbp-1;i++){
+		for(i=0;i<tmp;i++){
 			MPI_Recv(tab2,offset,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,NULL);
 			separate(&tab2,&tabx,offset,sizex);
 			MPI_Send(tab2,offset,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD);
@@ -84,7 +89,7 @@ int main(int argc, char**argv){
 	/* even rank proc */
 	}else if( my_rank % 2 == 0 ){
 		tab2 = (int*) malloc (sizeof(int)*sizex);
-		for(i=0;i<nbp-1;i++){
+		for(i=0;i<tmp;i++){
 			MPI_Send(tabx,sizex,MPI_INT,my_rank+1,TAG,MPI_COMM_WORLD);
 			MPI_Irecv(tabx,sizex,MPI_INT,my_rank+1,TAG,MPI_COMM_WORLD,&req1);
 
@@ -107,7 +112,7 @@ int main(int argc, char**argv){
 	/* odd rank proc */
 	}else{
 		tab2 = (int*) malloc (sizeof(int)*sizex);
-		for(i=0;i<nbp-1;i++){
+		for(i=0;i<tmp;i++){
 			if(i!=0)
 				MPI_Wait(&req1,NULL);
 			MPI_Recv(tab2,sizex,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,NULL);
@@ -130,6 +135,14 @@ int main(int argc, char**argv){
 			DEBUG_PRINT("OH GOD END",my_rank);
 	}
 	
+	if( my_rank == 0 ){
+		for(i=1;i<nbp;i++)
+			MPI_Recv(&tmp,1,MPI_INT,i,TAG,MPI_COMM_WORLD,NULL);
+		printf("time: %f\n",my_gettimeofday()-deb);
+	}
+	else
+		MPI_Send(&my_rank,1,MPI_INT,0,TAG,MPI_COMM_WORLD);
+
 //	MPI_Gather(tabx,sizex,MPI_INT,total,TOTAL,MPI_INT,0,MPI_COMM_WORLD);
 
 	/* verify 
