@@ -1,6 +1,6 @@
 CC = mpicc
 CC2 = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -fopenmp
 HOSTNPROC = -n 48 -hostfile hostfile
 
 BIN = bin

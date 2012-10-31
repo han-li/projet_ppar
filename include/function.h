@@ -7,6 +7,10 @@
 #include <pthread.h>
 #include <math.h>
 
+//#ifdef _OPENMP
+#include <omp.h>
+//#endif
+
 #ifdef DEBUG
 #define DEBUG_PRINT(x,y) printf("%s %d\n",x,y)
 #else
@@ -20,6 +24,7 @@
 int sizex,*tabx;
 pthread_t pid[4];
 
+
 /* afficher le tableau */
 void print_tab(int*tab,int size);
 
@@ -32,6 +37,7 @@ void compare_exchange(int *a,int* b);
 /* trier le tab par la facon pair_impair*/
 void sort(int *tab,int size);
 
+/* trier par PRAM */
 void sort2(int *tab,int size);
 
 /* verifier le tab soit bien trie ou pas */

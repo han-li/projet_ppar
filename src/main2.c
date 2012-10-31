@@ -1,27 +1,43 @@
 #include "../include/function.h"
 
 int main(int argc,char**argv){
-	int i;
-	sizex = 100000;
+	int *tab,*ind,*tab2,total,i,j;
 
-	tabx = create_random_tab(sizex);
-//	print_tab(tabx,sizex);
+	total = 100;
+	tab = create_random_tab(total);
+	tab2 = (int*)malloc(sizeof(int)*total);
+	ind = (int*)malloc(sizeof(int)*total);
+	memcpy(tab2,tab,sizeof(int)*total);
 
-	for(i=0;i<4;i++)
-		if(pthread_create(&pid[i],NULL,sort_thread,&i)!=0){
-			perror("pthread");
-			exit(1);
-		}
-
-	for(i=0;i<4;i++)
-		pthread_join(pid[i],NULL);
+	omp_set_num_threads(4);
 	
-	//print_tab(tabx,sizex);
+#pragma omp parallel
+{
+#pragma omp for private(j)
+	for(i=0;i<total;i++){
+		ind[i] = 0;
+		for(j=0;j<total;j++)
+			if(tab[i]>tab[j])
+				ind[i]++;
+	}
+}
 
-	separate_thread(tabx,sizex);
-	if(verify(tabx,sizex))
-//		print_tab(tabx,sizex);
-//	else
-		DEBUG_PRINT("HELL YEAH",0);
+	memset(tab,-1,sizeof(int)*total);
+#pragma omp parallel
+{
+#pragma omp for private(j)
+	for(i=0;i<total;i++){
+		j=ind[i];
+		while(tab[j]!=-1)j++;
+		tab[j] = tab2[i];
+	}
+}
+	free(ind);
+	free(tab2);
+
+	if(!verify(tab,total))
+		print_tab(tab,total);
+	else
+		printf("true\n");
 	return 0;
 }
