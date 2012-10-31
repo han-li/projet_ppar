@@ -6,6 +6,10 @@
 #include <string.h>
 #include <pthread.h>
 #include <math.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 //#ifdef _OPENMP
 #include <omp.h>
@@ -39,6 +43,9 @@ void sort(int *tab,int size);
 
 /* trier par PRAM */
 void sort2(int *tab,int size);
+
+/* trier par PRAM en openmp */
+void sort_omp(int *tab,int size);
 
 /* verifier le tab soit bien trie ou pas */
 int verify(int *tab,int size);

@@ -1,7 +1,7 @@
 CC = mpicc
 CC2 = gcc
 CFLAGS = -Wall -fopenmp
-HOSTNPROC = -n 48 -hostfile hostfile
+HOSTNPROC = -n 12 -hostfile hostfile
 
 BIN = bin
 INC = include
@@ -12,8 +12,10 @@ MAIN = main
 RUN = mpirun
 TEST = main2
 
-all: $(OBJ)/$(MAIN).o $(OBJ)/function.o 
+all: $(OBJ)/$(MAIN).o $(OBJ)/function.o
 	$(CC) $(CFLAGS) -o $(BIN)/$(MAIN) $^
+#	$(CC) $(CFLAGS) -o $(BIN)/set_host $(SRC)/set_host.c
+#	$(BIN)/set_host
 
 $(OBJ)/$(MAIN).o: $(SRC)/$(MAIN).c $(INC)/function.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -31,5 +33,5 @@ exec:
 	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
 
 test:
-	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
-	$(BIN)/$(TEST)
+	$(CC) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
+	$(RUN) $(HOSTNPROC) $(BIN)/$(TEST)

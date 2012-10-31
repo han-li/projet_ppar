@@ -41,7 +41,7 @@ int main(int argc, char**argv){
 	if( my_rank == 0 )
 		deb = my_gettimeofday();
 	
-	/* sort by threads */
+	/* sort by threads 
 	for(i=0;i<4;i++)
 		if(pthread_create(&pid[i],NULL,sort_thread,&i)!=0){
 			perror("pthread");
@@ -56,6 +56,10 @@ int main(int argc, char**argv){
 	separate_thread(tabx,sizex);
 
 	DEBUG_PRINT("gather",my_rank);
+*/
+
+	/* sort by openmp */
+	sort_omp(tabx,sizex);
 
 	tmp = (nbp%2 == 0)?(nbp/2):((nbp+1)/2);
 	/* first proc */
