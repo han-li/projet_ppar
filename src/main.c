@@ -149,6 +149,31 @@ int main(int argc, char**argv){
 	else
 		MPI_Send(&my_rank,1,MPI_INT,0,TAG,MPI_COMM_WORLD);
 
+	/* Test result */
+
+	int res[2];		// test's token
+
+	if( my_rank == 0 ){
+		if(verify(tabx,sizex)){
+			res[0] = 1;			// tell next pc i'm ok
+			res[1] = tabx[sizex-1];		// my biggest num
+		}
+		else
+			res[0] = 0;
+		MPI_Send(res,2,MPI_INT,my_rank+1,TAG_RES,MPI_COMM_WORLD);	// send token to next
+		MPI_Recv(res,2,MPI_INT,nbp-1,TAG_RES,MPI_COMM_WORLD,NULL);	// receive after token's circle
+		if(res[0])
+			printf("true\n");
+		else
+			printf("false\n");
+	}else{
+		MPI_Recv(res,2,MPI_INT,my_rank-1,TAG_RES,MPI_COMM_WORLD,NULL);
+		if(res[0] == 1 && verify(tabx,sizex) && res[1]<=tabx[0])
+			res[1] = tabx[sizex-1];
+		else
+			res[0] = 0;
+		MPI_Send(res,2,MPI_INT,(my_rank+1)%nbp,TAG_RES,MPI_COMM_WORLD);
+	}
 //	MPI_Gather(tabx,sizex,MPI_INT,total,TOTAL,MPI_INT,0,MPI_COMM_WORLD);
 
 	/* verify 
@@ -160,7 +185,7 @@ int main(int argc, char**argv){
 			printf("false \n");
 	}*/
 
-	/* IO part */
+	/* IO part 
 	DEBUG_PRINT("FILE_OPEN",my_rank);
 	MPI_File fh;
 	if(MPI_File_open(MPI_COMM_WORLD,"/Vrac/2960481/2960481_test",MPI_MODE_WRONLY | MPI_MODE_CREATE, MPI_INFO_NULL, &fh)!=0){
@@ -179,8 +204,8 @@ int main(int argc, char**argv){
 	free(tabx);
 	if(tab2!=NULL)
 		free(tab2);
-
-	/* test result */
+*/
+	/* test result 
 	DEBUG_PRINT("TEST RESULT",my_rank);
 	if( my_rank == 0 )
 		for(i=1;i<nbp;i++)
@@ -215,7 +240,7 @@ int main(int argc, char**argv){
 	free(tabx);
 	MPI_File_close(&fh);
 	DEBUG_PRINT("END TEST",my_rank);
-
+*/
 stop:
 	/* finish MPI */
 	DEBUG_PRINT("fini",my_rank);

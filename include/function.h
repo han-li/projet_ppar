@@ -23,6 +23,7 @@
 
 #define TOTAL 1572864
 #define TAG 1
+#define TAG_RES 2
 
 /* global size pour thread */
 int sizex,*tabx;

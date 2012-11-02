@@ -230,9 +230,9 @@ void trifusion_tmp(int *tab,int size){
 	
 	scinder(tab,size,&tab2,&size1,&size2);
 #pragma omp task
-	trifusion(tab,size1);
+	trifusion_tmp(tab,size1);
 #pragma omp task
-	trifusion(tab2,size2);
+	trifusion_tmp(tab2,size2);
 #pragma omp taskwait
 	fusion(tab,tab2,size1,size2);
 }
