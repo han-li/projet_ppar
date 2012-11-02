@@ -222,26 +222,18 @@ void fusion(int *tab1,int *tab2,int size1,int size2){
 }
 
 void trifusion_tmp(int *tab,int size){
-	DEBUG_PRINT("thread",omp_get_thread_num());
 	if(size <= 1)
 		return;
 	
 	int *tab2,size1,size2;
 	
 	scinder(tab,size,&tab2,&size1,&size2);
-#pragma omp task
 	trifusion(tab,size1);
-#pragma omp task
 	trifusion(tab2,size2);
-#pragma omp taskwait
 	fusion(tab,tab2,size1,size2);
 }
 
 void trifusion(int *tab,int size){
-	omp_set_num_threads(4);
-
-#pragma omp parallel
-#pragma omp single
 	trifusion_tmp(tab,size);
 }
 
@@ -268,26 +260,15 @@ int partitionner(int *tab,int first,int last,int pivot){
 void trirapide_tmp(int *tab,int first,int last){
 	int pivot;
 	if(first<last){
-		DEBUG_PRINT("thread",omp_get_thread_num());
 		pivot = choix_pivot(tab,first,last);
-		DEBUG_PRINT("PIVOT",pivot);
-		//print_tab(&tab[first],last-first+1);
 		pivot = partitionner(tab,first,last,pivot);
-		DEBUG_PRINT("PIVOT",pivot);
-		//print_tab(&tab[first],last-first+1);
-#pragma omp task
 		trirapide_tmp(tab,first,pivot-1);
-#pragma omp task
 		trirapide_tmp(tab,pivot+1,last);
 	}
 }
 
 void trirapide(int *tab,int size){
-	omp_set_num_threads(4);
-#pragma omp parallel
-#pragma omp single
 	trirapide_tmp(tab,0,size-1);
-#pragma omp taskwait
 }
 
 int verify2(int *tab1,int *tab2,int size1,int size2){
@@ -309,21 +290,24 @@ void *sort_thread(void* arg){
 
 	if( sizex%4 == 0 ){
 		ssize = sizex/4;
-		sort2(tabx+(ind*ssize),ssize);
-		if(!verify(tabx+(ind*ssize),ssize))
+		trifusion(&tabx[ind*ssize],ssize);
+//		trirapide(&tabx[ind*ssize],ssize);
+		if(!verify(&tabx[ind*ssize],ssize))
 			DEBUG_PRINT("SORT_ERROR",1);
 		
 	}else{
 		ssize = ceil((double)sizex/4.);
 		if( ind != 3 ){
-			sort2(tabx+(ind*ssize),ssize);
-			if(!verify(tabx+(ind*ssize),ssize))
+			trifusion(&tabx[ind*ssize],ssize);
+//			trirapide(&tabx[ind*ssize],ssize);
+			if(!verify(&tabx[ind*ssize],ssize))
 				DEBUG_PRINT("SORT_ERROR",2);
 		}
 		else{
 			sssize = sizex - 3*ssize;	
-			sort2(tabx+(ind*ssize),sssize);
-			if(!verify(tabx+(ind*ssize),sssize))
+			trifusion(&tabx[ind*ssize],sssize);
+//			trirapide(&tabx[ind*ssize],sssize);
+			if(!verify(&tabx[ind*ssize],sssize))
 				DEBUG_PRINT("SORT_ERROR",3);
 		}
 	}
