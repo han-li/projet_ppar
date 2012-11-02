@@ -33,5 +33,6 @@ exec:
 	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
 
 test:
-	$(CC) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
-	$(RUN) $(HOSTNPROC) $(BIN)/$(TEST)
+	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
+#	$(RUN) $(HOSTNPROC) $(BIN)/$(TEST)
+	$(BIN)/$(TEST)

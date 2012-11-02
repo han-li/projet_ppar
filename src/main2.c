@@ -1,18 +1,15 @@
 #include "../include/function.h"
 
 int main(int argc,char**argv){
-	MPI_Init(&argc,&argv);
-
-	int *tab,size=50;
+	int *tab,size=21;
 	tab = create_random_tab(size);
-
-	sort_omp(tab,size);
-
+	print_tab(tab,size);
+	trirapide(tab,size);
+	print_tab(tab,size);
 	if(verify(tab,size))
 		printf("true\n");
 	else
-		print_tab(tab,size);
+		printf("false\n");
 
-	MPI_Finalize();
 	return 0;
 }

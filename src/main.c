@@ -59,7 +59,9 @@ int main(int argc, char**argv){
 */
 
 	/* sort by openmp */
-	sort_omp(tabx,sizex);
+//	sort_omp(tabx,sizex);
+//	trirapide(tabx,sizex);
+	trifusion(tabx,sizex);
 
 	tmp = (nbp%2 == 0)?(nbp/2):((nbp+1)/2);
 	/* first proc */
@@ -80,7 +82,7 @@ int main(int argc, char**argv){
 		tab2 = (int*) malloc (sizeof(int)*offset);
 		for(i=0;i<tmp;i++){
 			MPI_Recv(tab2,offset,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,NULL);
-			separate(&tab2,&tabx,offset,sizex);
+			fusion(tab2,tabx,offset,sizex);
 			MPI_Send(tab2,offset,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD);
 		}
 
@@ -101,7 +103,7 @@ int main(int argc, char**argv){
 				MPI_Wait(&req2,NULL);
 			MPI_Recv(tab2,sizex,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,NULL);
 			MPI_Wait(&req1,NULL);
-			separate(&tab2,&tabx,sizex,sizex);
+			fusion(tab2,tabx,sizex,sizex);
 			MPI_Isend(tab2,sizex,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,&req2);
 		}
 
@@ -122,7 +124,7 @@ int main(int argc, char**argv){
 			MPI_Recv(tab2,sizex,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,NULL);
 			if(i!=0)
 				MPI_Wait(&req2,NULL);
-			separate(&tab2,&tabx,sizex,sizex);
+			fusion(tab2,tabx,sizex,sizex);
 			MPI_Isend(tab2,sizex,MPI_INT,my_rank-1,TAG,MPI_COMM_WORLD,&req1);
 
 			MPI_Send(tabx,sizex,MPI_INT,my_rank+1,TAG,MPI_COMM_WORLD);

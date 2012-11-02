@@ -37,6 +37,7 @@ int *create_random_tab(int size);
 
 /* si a > b, echange les deux */
 void compare_exchange(int *a,int* b);
+void exchange(int *a,int* b);
 
 /* trier le tab par la facon pair_impair*/
 void sort(int *tab,int size);
@@ -50,8 +51,20 @@ void sort_omp(int *tab,int size);
 /* verifier le tab soit bien trie ou pas */
 int verify(int *tab,int size);
 
-/* pour tous les donnees de tab1 et tab2, tab1 garde les plus petits, tab2 garde les plus grands */
+/* pour tous les donnees de tab1 et tab2 tries, tab1 garde les plus petits, tab2 garde les plus grands */
 void separate(int **tab1,int **tab2,int size1,int size2);
+
+/* tri_fusion */
+void scinder(int *tab,int size,int **tab2,int *size1,int *size2);
+void fusion(int *tab1,int *tab2,int size1,int size2);
+void trifusion_tmp(int *tab,int size);
+void trifusion(int *tab,int size);
+
+/* tri_rapide */
+int choix_pivot(int *tab,int first,int last);
+int partitionner(int *tab,int first,int last,int pivot);
+void trirapide_tmp(int *tab,int first,int last);
+void trirapide(int *tab,int size);
 
 /* verifier la fonction separate(...) */
 int verify2(int *tab1,int *tab2,int size1,int size2);
