@@ -228,8 +228,8 @@ void trifusion_tmp(int *tab,int size){
 	int *tab2,size1,size2;
 	
 	scinder(tab,size,&tab2,&size1,&size2);
-	trifusion(tab,size1);
-	trifusion(tab2,size2);
+	trifusion_tmp(tab,size1);
+	trifusion_tmp(tab2,size2);
 	fusion(tab,tab2,size1,size2);
 }
 
@@ -290,7 +290,8 @@ void *sort_thread(void* arg){
 
 	if( sizex%4 == 0 ){
 		ssize = sizex/4;
-		trifusion(&tabx[ind*ssize],ssize);
+		(*func)(&tabx[ind*ssize],ssize);
+//		trifusion(&tabx[ind*ssize],ssize);
 //		trirapide(&tabx[ind*ssize],ssize);
 		if(!verify(&tabx[ind*ssize],ssize))
 			DEBUG_PRINT("SORT_ERROR",1);
@@ -298,14 +299,16 @@ void *sort_thread(void* arg){
 	}else{
 		ssize = ceil((double)sizex/4.);
 		if( ind != 3 ){
-			trifusion(&tabx[ind*ssize],ssize);
+			(*func)(&tabx[ind*ssize],ssize);
+//			trifusion(&tabx[ind*ssize],ssize);
 //			trirapide(&tabx[ind*ssize],ssize);
 			if(!verify(&tabx[ind*ssize],ssize))
 				DEBUG_PRINT("SORT_ERROR",2);
 		}
 		else{
 			sssize = sizex - 3*ssize;	
-			trifusion(&tabx[ind*ssize],sssize);
+			(*func)(&tabx[ind*ssize],ssize);
+//			trifusion(&tabx[ind*ssize],sssize);
 //			trirapide(&tabx[ind*ssize],sssize);
 			if(!verify(&tabx[ind*ssize],sssize))
 				DEBUG_PRINT("SORT_ERROR",3);
@@ -400,3 +403,10 @@ void separate_thread(int *tab,int size){
 */
 }
 
+int compare(void const*a,void const*b){
+	return (*(int*)a)-(*(int*)b);
+}
+
+void my_qsort(int*tab,int size){
+	qsort(tab,size,sizeof(int),compare);
+}

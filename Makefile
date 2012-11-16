@@ -21,9 +21,6 @@ $(OBJ)/$(MAIN).o: $(SRC)/$(MAIN).c $(INC)/function.h
 $(OBJ)/function.o: $(SRC)/function.c $(INC)/function.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-%: $(SRC)/%.c
-	$(CC2) $(CFLAGS) -o $(BIN)/$@ $^
-
 clean:
 	rm $(OBJ)/* $(BIN)/* 
 
@@ -33,3 +30,7 @@ exec:
 test:
 	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
 	$(BIN)/$(TEST)
+
+%:
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) $@
+
