@@ -28,7 +28,7 @@
 /* global size pour thread */
 int sizex,*tabx;
 pthread_t pid[4];
-
+void (*func)(int*,int);
 
 /* afficher le tableau */
 void print_tab(int*tab,int size);
@@ -77,3 +77,8 @@ double my_gettimeofday();
 void *sort_thread(void* arg);
 
 void separate_thread(int *tab,int size);
+
+/* qsort */
+int compare(void const*a,void const*b);
+
+void my_qsort(int *tab,int size);

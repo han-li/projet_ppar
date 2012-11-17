@@ -90,7 +90,6 @@ void sort_omp(int *tab,int size){
 	int i,j;
 	memcpy(new_tab,tab,sizeof(int)*size);
 
-	omp_set_num_threads(4);
 //	omp_set_nested(1);
 
 #pragma omp parallel
@@ -238,7 +237,6 @@ void trifusion_tmp(int *tab,int size){
 }
 
 void trifusion(int *tab,int size){
-	omp_set_num_threads(4);
 
 #pragma omp parallel
 #pragma omp single
@@ -283,7 +281,6 @@ void trirapide_tmp(int *tab,int first,int last){
 }
 
 void trirapide(int *tab,int size){
-	omp_set_num_threads(4);
 #pragma omp parallel
 #pragma omp single
 	trirapide_tmp(tab,0,size-1);
@@ -411,3 +408,10 @@ void separate_thread(int *tab,int size){
 	free(tab2);
 }
 
+int compare(void const*a,void const*b){
+	return *(int*)a-*(int*)b;
+}
+
+void my_qsort(int*tab,int size){
+	qsort(tab,size,sizeof(int),compare);
+}
