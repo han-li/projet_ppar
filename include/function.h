@@ -49,6 +49,8 @@ void sort2(int *tab,int size);
 /* trier par PRAM en openmp */
 void sort_omp(int *tab,int size);
 
+void sort_omp2(int *tab,int size);
+
 /* verifier le tab soit bien trie ou pas */
 int verify(int *tab,int size);
 

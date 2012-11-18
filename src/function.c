@@ -90,23 +90,17 @@ void sort_omp(int *tab,int size){
 	int i,j;
 	memcpy(new_tab,tab,sizeof(int)*size);
 
-//	omp_set_nested(1);
 
 #pragma omp parallel
 {
-#pragma omp for private(j)
+#pragma omp for private(j) schedule(runtime)
 	for(i=0;i<size;i++){
-//#pragma omp task private(j)
-//		{
 		ind[i] = 0;
-//#pragma omp parallel
-//#pragma omp for
 		for(j=0;j<size;j++)
 			if(tab[i]>tab[j])
 				ind[i]++;
 		if( i % 10000 == 0 )
 			DEBUG_PRINT("step",i/10000);
-//		}
 	}
 }
 
@@ -114,11 +108,51 @@ void sort_omp(int *tab,int size){
 
 #pragma omp parallel
 {
-#pragma omp for private(j)
+#pragma omp for private(j) schedule(runtime)
 	for(i=0;i<size;i++){
 		j=ind[i];
 		while(tab[j]!=-1)j++;
 		tab[j] = new_tab[i];
+	}
+}
+
+	free(ind);
+	free(new_tab);
+}
+
+void sort_omp2(int *tab,int size){
+	int *ind = (int*)malloc(sizeof(int)*size);
+       	int *new_tab = (int*)malloc(sizeof(int)*size);
+	int i,j;
+	memcpy(new_tab,tab,sizeof(int)*size);
+
+
+#pragma omp parallel
+{
+#pragma omp master
+	for(i=0;i<size;i++){
+		ind[i] = 0;
+		#pragma omp task private(j) firstprivate(i)
+		for(j=0;j<size;j++)
+			if(tab[i]>tab[j])
+				ind[i]++;
+		if( i % 10000 == 0 )
+			DEBUG_PRINT("step",i/10000);
+	}
+}
+#pragma omp taskwait
+	memset(tab,-1,sizeof(int)*size);
+
+#pragma omp parallel
+{
+#pragma omp master
+	for(i=0;i<size;i++){
+		#pragma omp task private(j) firstprivate(i)
+		{
+			j=ind[i];
+			while(tab[j]!=-1)j++;
+			tab[j] = new_tab[i];
+		}
 	}
 }
 

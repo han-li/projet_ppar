@@ -26,7 +26,7 @@ $(OBJ)/function.o: $(SRC)/function.c $(INC)/function.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 %:
-	$(BIN)/$(TEST) $@
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) $@
 
 clean:
 	rm $(OBJ)/* $(BIN)/* 

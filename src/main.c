@@ -60,8 +60,10 @@ int main(int argc, char**argv){
 			func = &trirapide;
 		if(strcmp(argv[1],"qsort")==0)
 			func = &my_qsort;
-		if(strcmp(argv[1],"trifusion")==0)
-			func = &trifusion;
+		if(strcmp(argv[1],"sort_omp")==0)
+			func = &sort_omp;
+		if(strcmp(argv[1],"sort_omp2")==0)
+			func = &sort_omp2;
 	}
 
 	(*func)(tabx,sizex);
