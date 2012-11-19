@@ -2,11 +2,11 @@
 on ajoute openmp dans le programme.
 
 ## Progres
-cette fois je utilise le openmp a la place de thread. Mais le resultat n'est pas si bon que j'imagine. 
-C'est a cause de la structure de openmp, il a encore beaucoup de chose a ameliorer.
+task est facile a integrer, mais pas trop de l'efficacite.
 
 ## Run test
-make; make exec
+make; make exec(avec mpi)
+make; make test(sans mpi)
 
 ## Doutes
 performance de openmp est vraiment pourri...

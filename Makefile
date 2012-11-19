@@ -32,7 +32,11 @@ clean:
 	rm $(OBJ)/* $(BIN)/* 
 
 exec:
-	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) trifusion
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) trirapide
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) qsort
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) sort_omp
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) sort_omp2
 
 test:
 	$(BIN)/$(TEST)
