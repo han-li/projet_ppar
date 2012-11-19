@@ -13,6 +13,7 @@ RUN = mpirun
 TEST = main2
 
 all: $(OBJ)/$(MAIN).o $(OBJ)/function.o 
+	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
 	$(CC) $(CFLAGS) -o $(BIN)/$(MAIN) $^
 
 $(OBJ)/$(MAIN).o: $(SRC)/$(MAIN).c $(INC)/function.h
@@ -25,7 +26,11 @@ clean:
 	rm $(OBJ)/* $(BIN)/* 
 
 exec:
-	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN)
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) trirapide
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) trifusion
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) qsort
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) pram
+	$(RUN) $(HOSTNPROC) $(BIN)/$(MAIN) pair_impair
 
 test:
 	$(CC2) $(CFLAGS) -o $(BIN)/$(TEST) $(SRC)/function.c $(SRC)/$(TEST).c -pthread -lm
